@@ -1,9 +1,10 @@
+use std::collections::HashSet;
 advent_of_code::solution!(2);
 
 pub fn part_one(input: &str) -> Option<u64> {
     let mut count = 0;
 
-    for cell in input.split(',').filter(|c| !c.is_empty()) {
+    for cell in input.trim().split(',').filter(|c| !c.is_empty()) {
         let mut ids = cell.split('-').filter_map(|s| s.parse::<u64>().ok());
 
         let Some(start) = ids.next() else { continue };
@@ -30,20 +31,20 @@ fn does_contains_substring_twice(s: &str) -> bool {
 
 pub fn part_two(input: &str) -> Option<u64> {
     let mut count = 0;
-
-    for cell in input.split(',').filter(|c| !c.is_empty()) {
+    let mut unique_numbers = HashSet::new();
+    for cell in input.trim().split(',').filter(|c| !c.is_empty()) {
         let mut ids = cell.split('-').filter_map(|s| s.parse::<u64>().ok());
 
-        let Some(start) = ids.next() else { continue };
-        let Some(end) = ids.next() else { continue };
+        let Some(mut start) = ids.next() else { continue };
+        let Some(mut end) = ids.next() else { continue };
 
         if start > end {
-            continue;
+           (start, end) = (end, start);
         }
 
         for n in start..=end {
             let s = n.to_string();
-            if does_contain_repeat_substring(&s) {
+            if does_contain_repeat_substring(&s) && unique_numbers.insert(n) {
                 count += n;
             }
         }
@@ -85,6 +86,6 @@ mod tests {
     #[test]
     fn test_part_two() {
         let result = part_two(&advent_of_code::template::read_file("examples", DAY));
-        assert_eq!(result, Some(19058204438));
+        assert_eq!(result, Some(4174379265));
     }
 }
