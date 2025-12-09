@@ -5,28 +5,37 @@ advent_of_code::solution!(3);
 pub fn part_one(input: &str) -> Option<u64> {
     let mut joltage = 0;
     for line in input.split('\n').filter(|c| !c.is_empty()) {
-        let mut largest_char = line.chars().nth(0).unwrap();
-        let mut second_largest_char = line.chars().nth(1).unwrap();
-        let mut second_largest_index = 1;
-        for n in 2..line.len() {
-            let c = line.chars().nth(n).unwrap();
-            if c > largest_char && n < line.len() - 1 {
-                largest_char = c;
-                if second_largest_index < n {
-                    second_largest_char = line.chars().nth(n + 1).unwrap();
-                    second_largest_index = n + 1;
+        let line_bytes = line.as_bytes();
+        let mut selected_indexes = [0, 1];
+        let mut search_range = line_bytes.len() - selected_indexes.len();
+        for i in 0..selected_indexes.len() {
+            let initial_idx = selected_indexes[i];
+            let mut initial_byte = line_bytes[initial_idx];
+            let max_index = initial_idx + search_range;
+            for n in initial_idx + 1..=max_index {
+                if line_bytes[n] > initial_byte {
+                    initial_byte = line_bytes[n];
+                    selected_indexes[i] = n
                 }
+            }
+            let move_index = selected_indexes[i] - initial_idx;
+            if move_index == 0 {
                 continue;
             }
-            if c > second_largest_char {
-                second_largest_char = c;
+            for n in i + 1..selected_indexes.len() {
+                selected_indexes[n] += move_index;
+            }
+            search_range -= move_index;
+            if search_range == 0 {
+                break;
             }
         }
-
-        let line_joltage = format!("{}{}", largest_char, second_largest_char)
-            .parse::<u64>()
-            .unwrap();
-        joltage += line_joltage;
+        let mut selected_bytes: [u8; 2] = [0; 2];
+        for n in 0..selected_indexes.len() {
+            selected_bytes[n] = line_bytes[selected_indexes[n]];
+        }
+        let selected_u64 = from_utf8(&selected_bytes).unwrap().parse::<u64>().unwrap();
+        joltage += selected_u64;
     }
     Some(joltage)
 }
