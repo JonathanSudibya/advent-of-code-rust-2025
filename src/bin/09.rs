@@ -1,5 +1,6 @@
 advent_of_code::solution!(9);
 
+use std::collections::HashMap;
 use geo::{coord, Contains, Coord, LineString, Polygon};
 
 pub fn part_one(input: &str) -> Option<u64> {
@@ -48,7 +49,7 @@ pub fn part_two(input: &str) -> Option<u64> {
 
         coord_table.push(coord!{ x: x, y: y});
     }
-    
+
     // Create the closed polygon from the red tiles
     let mut polygon_coords = coord_table.clone();
     if polygon_coords.first() != polygon_coords.last() {
@@ -63,7 +64,8 @@ pub fn part_two(input: &str) -> Option<u64> {
 
     // Find the largest rectangle with red corners that is fully contained in the polygon
     let mut max_area = 0u64;
-    
+    let mut corner_caches = HashMap::new();
+
     for i in 0..coord_table.len() {
         for j in i+1..coord_table.len() {
             let c1 = &coord_table[i];
@@ -73,6 +75,10 @@ pub fn part_two(input: &str) -> Option<u64> {
             let width = (c1.x - c2.x).abs() + 1.0;
             let height = (c1.y - c2.y).abs() + 1.0;
             let area = (width * height).round() as u64;
+
+            if area <= max_area {
+                continue;
+            }
 
             // Calculate rectangle bounds
             let min_x = c1.x.min(c2.x);
@@ -89,15 +95,23 @@ pub fn part_two(input: &str) -> Option<u64> {
             ];
 
             let all_corners_valid = corners.iter().all(|corner| {
-                polygon.contains(corner) || polygon.exterior().contains(corner)
+                let (x, y) = corner.x_y();
+                let key = format!("{},{}", x, y);
+                if let Some(c) = corner_caches.get(&key) {
+                    *c
+                } else {
+                    let result = polygon.contains(corner) || polygon.exterior().contains(corner);
+                    corner_caches.insert(key, result);
+                    result
+                }
             });
 
-            if all_corners_valid && area > max_area {
+            if all_corners_valid {
                 max_area = area;
             }
         }
     }
-    
+
     Some(max_area)
 }
 
