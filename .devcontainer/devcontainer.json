@@ -1,10 +1,6 @@
 {
     "name": "rust-devcontainer",
     "image": "mcr.microsoft.com/devcontainers/rust:latest",
-    "features": {
-        "ghcr.io/devcontainers/features/git:1": {},
-        "ghcr.io/devcontainers/features/github-cli:1": {}
-    },
     "postCreateCommand": "rustc --version",
     "mounts": [
         "source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
