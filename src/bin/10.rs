@@ -40,9 +40,9 @@ pub fn part_one(input: &str) -> Option<u64> {
                     let mut acc = 0u16;
                     let mut presses = 0;
 
-                    for i in 0..buttons.len() {
+                    for (i, button) in buttons.iter().enumerate() {
                         if (subset >> i) & 1 == 1 {
-                            acc ^= buttons[i];
+                            acc ^= *button;
                             presses += 1;
                         }
                     }
@@ -81,10 +81,10 @@ fn solve_recursive(joltages: Vec<u64>, buttons: &[u16], memo: &mut HashMap<Vec<u
         let mut subset_mask = 0u16;
         let mut cost: u64 = 0;
 
-        for j in 0..buttons.len() {
+        for (j, button) in buttons.iter().enumerate() {
             if (i >> j) & 1 == 1 {
                 subset_presses |= 1 << j;
-                subset_mask ^= buttons[j];
+                subset_mask ^= *button;
                 cost += 1;
             }
         }
@@ -93,15 +93,15 @@ fn solve_recursive(joltages: Vec<u64>, buttons: &[u16], memo: &mut HashMap<Vec<u
             let mut next_joltages = joltages.clone();
             let mut possible = true;
 
-            for j in 0..buttons.len() {
+            for (j, button) in buttons.iter().enumerate() {
                 if (subset_presses >> j) & 1 == 1 {
-                    for k in 0..joltages.len() {
-                        if (buttons[j] >> k) & 1 == 1 {
-                            if next_joltages[k] == 0 {
+                    for (k, joltage) in next_joltages.iter_mut().enumerate().take(joltages.len()) {
+                        if (*button >> k) & 1 == 1 {
+                            if *joltage == 0 {
                                 possible = false;
                                 break;
                             }
-                            next_joltages[k] -= 1;
+                            *joltage -= 1;
                         }
                     }
                 }

@@ -36,15 +36,13 @@ pub fn part_two(input: &str) -> Option<u64> {
     for line in input.split('\n').filter(|c| !c.is_empty()) {
         let mut x = 0.0;
         let mut y = 0.0;
-        let mut idx = 0;
-        for coordinate in line.split(',') {
+        for (idx, coordinate) in line.split(',').enumerate() {
             let c = coordinate.parse::<f64>().unwrap();
             if idx == 0 {
                 x = c;
             } else if idx == 1 {
                 y = c;
             }
-            idx += 1;
         }
 
         coord_table.push(coord!{ x: x, y: y});
@@ -53,7 +51,7 @@ pub fn part_two(input: &str) -> Option<u64> {
     // Create the closed polygon from the red tiles
     let mut polygon_coords = coord_table.clone();
     if polygon_coords.first() != polygon_coords.last() {
-        polygon_coords.push(polygon_coords.first().unwrap().clone());
+        polygon_coords.push(*polygon_coords.first().unwrap());
     }
     let line_string: LineString = polygon_coords.into_iter().collect();
 

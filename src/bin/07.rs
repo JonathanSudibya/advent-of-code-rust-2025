@@ -38,12 +38,11 @@ fn search_splitter(i: usize, j: usize, table: &mut Vec<Vec<u8>>) -> u64 {
             let spliter_count_r: u64 = if j < table[i].len() {
                 search_splitter(i, j+1, table)
             }else {0};
-            let new_spliter_count = spliter_count_l + spliter_count_r + 1;
-            return new_spliter_count;
+            spliter_count_l + spliter_count_r + 1
         }
         '.' => {
-            table[i][j] = '|' as u8;
-            return search_splitter(i+1, j, table);
+            table[i][j] = b'|';
+            search_splitter(i+1, j, table)
         }
         _ => {
             0
@@ -94,10 +93,10 @@ fn search_paths(i: usize, j: usize, table: &Vec<Vec<u8>>, dictionary: &mut HashM
             }else {0};
             let sub_total = spliter_count_l + spliter_count_r;
             dictionary.insert(key, sub_total);
-            return sub_total;
+            sub_total
         }
         '.' => {
-            return search_paths(i+1, j, table, dictionary);
+            search_paths(i+1, j, table, dictionary)
         }
         _ => {
             0

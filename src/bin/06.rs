@@ -31,20 +31,19 @@ pub fn part_one(input: &str) -> Option<u64> {
             42 => {
                 // '*'
                 let mut sub_total = 0;
-                for i in 0..row_count {
-                    let number = number_table[n][i];
+                for number in number_table[n].iter().take(row_count) {
                     if sub_total == 0 {
-                        sub_total += number
+                        sub_total += *number
                     } else {
-                        sub_total *= number
+                        sub_total *= *number
                     }
                 }
                 result += sub_total;
             }
             43 => {
                 // '+'
-                for i in 0..row_count {
-                    result += number_table[n][i];
+                for number in number_table[n].iter().take(row_count) {
+                    result += *number;
                 }
             }
             _ => {
@@ -109,7 +108,7 @@ pub fn part_two(input: &str) -> Option<u64> {
     Some(result)
 }
 
-fn transpose(matrix: &Vec<Vec<u8>>) -> Vec<Vec<u8>> {
+fn transpose(matrix: &[Vec<u8>]) -> Vec<Vec<u8>> {
     // Handle the case of an empty matrix or a matrix with empty rows
     if matrix.is_empty() || matrix[0].is_empty() {
         return Vec::new();

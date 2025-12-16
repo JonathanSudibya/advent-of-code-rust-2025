@@ -12,7 +12,7 @@ pub fn part_one(input: &str) -> Option<u64> {
     for y in 0..column_length {
         for x in 0..row_length {
             let b = field_data[y][x];
-            if b != '@' as u8 {
+            if b != b'@' {
                 continue;
             }
 
@@ -42,7 +42,7 @@ pub fn part_two(input: &str) -> Option<u64> {
         for y in 0..column_length {
             for x in 0..row_length {
                 let b = field_data[y][x];
-                if b != '@' as u8 {
+                if b != b'@' {
                     continue;
                 }
 
@@ -57,7 +57,7 @@ pub fn part_two(input: &str) -> Option<u64> {
         }
 
         for (x, y) in marked_paper_roll {
-            field_data[y][x] = '.' as u8
+            field_data[y][x] = b'.'
         }
 
         sum_paper_roll_removed += paper_roll_removed;
@@ -73,7 +73,7 @@ pub fn part_two(input: &str) -> Option<u64> {
 }
 
 fn check_neighbour_count(
-    field_data: &Vec<Vec<u8>>,
+    field_data: &[Vec<u8>],
     x: usize,
     y: usize,
     row_length: usize,

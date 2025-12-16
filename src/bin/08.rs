@@ -21,7 +21,7 @@ pub fn part_one(input: &str) -> Option<u64> {
     for i in 0..point_collection.len() {
         for j in i+1..point_collection.len() {
             let distance = point_collection[i].distance(&point_collection[j]);
-            let s = State{p1: i, p2: j, distance: distance};
+            let s = State{p1: i, p2: j, distance};
             distance_map.push(s);
         }
     }
@@ -50,8 +50,7 @@ pub fn part_one(input: &str) -> Option<u64> {
         let mut group_p1_size = 0;
         let mut group_p2 = 0;
         let mut group_p2_size = 0;
-        let mut group_count = 0;
-        for group in &circuits {
+        for (group_count, group) in circuits.iter().enumerate() {
             if group.contains(&s.p1) {
                 group_p1 = group_count;
                 group_p1_size = group.len();
@@ -60,8 +59,6 @@ pub fn part_one(input: &str) -> Option<u64> {
                 group_p2 = group_count;
                 group_p2_size = group.len();
             }
-
-            group_count += 1;
         }
 
         connections_attempted += 1;
@@ -115,7 +112,7 @@ pub fn part_two(input: &str) -> Option<u64> {
     for i in 0..point_collection.len() {
         for j in i+1..point_collection.len() {
             let distance = point_collection[i].distance(&point_collection[j]);
-            let s = State{p1: i, p2: j, distance: distance};
+            let s = State{p1: i, p2: j, distance};
             distance_map.push(s);
         }
     }
@@ -131,8 +128,7 @@ pub fn part_two(input: &str) -> Option<u64> {
         let mut group_p1_size = 0;
         let mut group_p2 = 0;
         let mut group_p2_size = 0;
-        let mut group_count = 0;
-        for group in &circuits {
+        for (group_count, group) in circuits.iter().enumerate() {
             if group.contains(&s.p1) {
                 group_p1 = group_count;
                 group_p1_size = group.len();
@@ -141,8 +137,6 @@ pub fn part_two(input: &str) -> Option<u64> {
                 group_p2 = group_count;
                 group_p2_size = group.len();
             }
-
-            group_count += 1;
         }
 
         if group_p1 == group_p2 {

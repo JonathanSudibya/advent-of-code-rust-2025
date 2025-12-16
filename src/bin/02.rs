@@ -26,7 +26,7 @@ pub fn part_one(input: &str) -> Option<u64> {
 
 fn does_contains_substring_twice(s: &str) -> bool {
     let len = s.len();
-    len % 2 == 0 && &s[..len / 2] == &s[len / 2..]
+    len.is_multiple_of(2) && s[..len / 2] == s[len / 2..]
 }
 
 pub fn part_two(input: &str) -> Option<u64> {
@@ -59,7 +59,7 @@ fn does_contain_repeat_substring(input: &str) -> bool {
         let sub = &input[..sub_len];
         let remainder = &input[sub_len..];
 
-        if remainder.len() % sub_len != 0 {
+        if !remainder.len().is_multiple_of(sub_len) {
             continue;
         }
 

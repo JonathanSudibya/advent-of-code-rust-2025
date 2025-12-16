@@ -12,7 +12,7 @@ pub fn part_one(input: &str) -> Option<u64> {
             let initial_idx = selected_indexes[i];
             let mut initial_byte = line_bytes[initial_idx];
             let max_index = initial_idx + search_range;
-            for n in initial_idx + 1..=max_index {
+            for (n, _) in line_bytes.iter().enumerate().take(max_index + 1).skip(initial_idx + 1) {
                 if line_bytes[n] > initial_byte {
                     initial_byte = line_bytes[n];
                     selected_indexes[i] = n
@@ -22,8 +22,8 @@ pub fn part_one(input: &str) -> Option<u64> {
             if move_index == 0 {
                 continue;
             }
-            for n in i + 1..selected_indexes.len() {
-                selected_indexes[n] += move_index;
+            for selected_index in selected_indexes.iter_mut().skip(i+1) {
+                *selected_index += move_index;
             }
             search_range -= move_index;
             if search_range == 0 {
@@ -50,9 +50,9 @@ pub fn part_two(input: &str) -> Option<u64> {
             let initial_idx = selected_indexes[i];
             let mut initial_byte = line_bytes[initial_idx];
             let max_index = initial_idx + search_range;
-            for n in initial_idx + 1..=max_index {
-                if line_bytes[n] > initial_byte {
-                    initial_byte = line_bytes[n];
+            for (n, selected_byte) in line_bytes.iter().enumerate().take(max_index + 1).skip(initial_idx + 1) {
+                if *selected_byte > initial_byte {
+                    initial_byte = *selected_byte;
                     selected_indexes[i] = n
                 }
             }
@@ -60,8 +60,8 @@ pub fn part_two(input: &str) -> Option<u64> {
             if move_index == 0 {
                 continue;
             }
-            for n in i + 1..selected_indexes.len() {
-                selected_indexes[n] += move_index;
+            for selected_index in selected_indexes.iter_mut().skip(i + 1) {
+                *selected_index += move_index;
             }
             search_range -= move_index;
             if search_range == 0 {
